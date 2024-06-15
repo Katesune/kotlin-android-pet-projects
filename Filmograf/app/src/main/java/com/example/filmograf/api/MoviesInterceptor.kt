@@ -18,17 +18,17 @@ class MoviesInterceptor: Interceptor {
 
         val initialRequest: Request = chain.request()
 
-        val urlWithProps: HttpUrl = initialRequest.url().newBuilder()
+        val urlWithProps: HttpUrl = initialRequest.url.newBuilder()
             .addQueryParameter("selectFields", selectFields.toString())
             .build()
 
         val requestWithProps: Request = initialRequest.newBuilder()
             .addHeader("Accept", "application/json")
             .addHeader("X-API-KEY", API_KEY)
-            .url(urlWithProps.url())
+            .url(urlWithProps)
             .build()
 
-        Log.d("request", requestWithProps.url().toString())
+        Log.d("request", requestWithProps.url.toString())
 
         return chain.proceed(requestWithProps)
     }

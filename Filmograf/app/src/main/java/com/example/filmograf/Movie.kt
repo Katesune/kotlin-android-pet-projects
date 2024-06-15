@@ -1,5 +1,6 @@
 package com.example.filmograf
 
+import android.graphics.Bitmap
 import android.net.Uri
 
 class Movie (
@@ -10,18 +11,15 @@ class Movie (
     var slogan: String = "",
     var rating: Float = 0f,
     var genres: List<String> = listOf(),
-    var poster: String = "",
+    var posterUri: String = "",
     var persons: List<Person> = listOf(),
     var shortDescription: String = "",
 ) {
-    val posterUri = Uri.parse(poster)
-        .buildUpon()
+    val imagesUrls = listOf(posterUri) + persons.map { it.photoUrl }
 }
 
 class Person(
     var id: Int = 0,
     var name: String = "",
-    var photo: String = ""
-) {
-    val photoUrl = Uri.parse(photo).buildUpon()
-}
+    var photoUrl: String = ""
+)

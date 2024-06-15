@@ -9,14 +9,13 @@ class MoviesDeserializer: JsonDeserializer<MoviesResponse>, MovieParsable {
     override fun deserialize(
         json: JsonElement?,
         typeOfT: Type?,
-        context: JsonDeserializationContext?
-    ): MoviesResponse {
-        val movies: List<Movie> = json?.let {
-            val jsonMovies =  it.asJsonObject.get("docs")
+        context: JsonDeserializationContext?)
+    : MoviesResponse {
 
-            jsonMovies?.asJsonArray?.map { movie ->
-                parseMovie(movie.asJsonObject)
-            } ?: listOf(parseMovie(it.asJsonObject))
+        val movies: List<Movie> = json?.let {
+
+            val jsonMovies =  it.asJsonObject.get("docs")
+            jsonMovies?.unpackDocs() ?: listOf(parseMovie(it.asJsonObject))
 
         } ?: listOf()
 
@@ -24,7 +23,12 @@ class MoviesDeserializer: JsonDeserializer<MoviesResponse>, MovieParsable {
     }
 }
 
-interface MovieParsable {
+private interface MovieParsable {
+    fun JsonElement?.unpackDocs(): List<Movie> {
+        return this?.asJsonArray?.map { movie ->
+            parseMovie(movie.asJsonObject)
+        } ?: listOf()
+    }
 
     fun parseMovie(film: JsonObject): Movie {
         return Movie (
@@ -35,7 +39,7 @@ interface MovieParsable {
             slogan = film.getStringProp("slogan"),
             rating = film.getAsJsonObject("rating")?.getFloatProp("kp") ?: 0f,
             genres = film.getAsJsonArray("genres")?.map{ it.asJsonObject.getStringProp("name")} ?: listOf(),
-            poster = film.getAsJsonObject("poster").asJsonObject?.getStringProp("url") ?: "",
+            posterUri = film.getAsJsonObject("poster").asJsonObject?.getStringProp("url") ?: "",
             persons = film.getAsJsonArray("persons")?.map {
                 it.asJsonObject?.parsePerson() ?: Person()
             } ?: listOf()
@@ -67,7 +71,7 @@ interface MovieParsable {
         return Person(
             id = this.getIntProp("id"),
             name = this.getStringProp("name"),
-            photo = this.getStringProp("photo")
+            photoUrl = this.getStringProp("photo")
         )
     }
 }

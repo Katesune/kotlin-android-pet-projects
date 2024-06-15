@@ -1,5 +1,6 @@
 package com.example.filmograf
 
+import android.graphics.Bitmap
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.ComponentActivity
@@ -22,10 +23,13 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -53,6 +57,7 @@ class MoviesActivity : ComponentActivity() {
 
         setContent {
             FilmografTheme {
+                moviesViewModel.collectMovies()
                 MainContent(moviesViewModel)
             }
         }
@@ -65,36 +70,33 @@ class MoviesActivity : ComponentActivity() {
 
 @Composable
 fun MainContent(moviesViewModel: MoviesViewModel) {
-    val itemsState = moviesViewModel.moviesLiveData.observeAsState()
+    val movies = moviesViewModel.movies.collectAsState()
+    val pictures = moviesViewModel.imageCollection.collectAsState()
 
-    itemsState.value?.let {
-        FillMoviesContent(it)
-        Log.d(TAG, it.size.toString())
-    }
-}
-
-@Composable
-fun FillMoviesContent(films: List<Movie>) {
     LazyColumn (
         modifier = Modifier
             .fillMaxSize()
             .background(Color.White)
     ) {
-        items(films.size) {position ->
-            MovieItem(films[position])
+        items(movies.value.size) {position ->
+            MovieItem(movies.value[position], pictures.value)
         }
     }
+
 }
 
+
 @Composable
-fun MovieItem(movie: Movie) {
+fun MovieItem(movie: Movie, pictures: Map<String, Bitmap?>) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
             .padding(bottom = 24.dp)
     ) {
 
-        FilmHeader(movie)
+        val poster = pictures.getOrDefault(movie.posterUri, null)
+        FilmHeader(movie, poster)
+
         Column (
             modifier = Modifier.padding(horizontal = 24.dp)
         ) {
@@ -102,28 +104,32 @@ fun MovieItem(movie: Movie) {
             MovieGenres(movie.genres)
             MovieDescription(movie.description)
             MovieSlogan(movie.slogan)
-            PersonsRow(movie.persons)
+            PersonsRow(movie.persons, pictures)
         }
     }
 }
 
 @Composable
-fun FilmHeader(movie: Movie) {
+fun FilmHeader(movie: Movie, poster: Bitmap?) {
     Box (
         contentAlignment = Alignment.TopStart,
         modifier = Modifier
             .fillMaxWidth()
     ) {
-        MoviePoster(movie.title)
+        MoviePoster(movie, poster)
         MovieRating(movie.rating, Modifier.align(Alignment.BottomStart))
     }
 }
 
 @Composable
-fun MoviePoster(title: String) {
+fun MoviePoster(movie: Movie, poster: Bitmap?) {
+
+    val paint = if (poster != null) BitmapPainter(poster.asImageBitmap())
+    else painterResource(id = R.drawable.orig)
+
     Image (
-        painter = painterResource(id = R.drawable.orig),
-        contentDescription = stringResource(R.string.poster_description, title),
+        painter = paint,
+        contentDescription = stringResource(R.string.poster_description, movie.title),
         contentScale = ContentScale.FillWidth,
         alignment = Alignment.TopStart,
 
@@ -131,6 +137,7 @@ fun MoviePoster(title: String) {
             //.clip(CutCornerShape(24.dp))
             .fillMaxWidth()
             .height(200.dp)
+
     )
 }
 
@@ -237,32 +244,39 @@ fun MovieSlogan(slogan: String) {
 }
 
 @Composable
-fun PersonsRow(persons: List<Person>) {
+fun PersonsRow(persons: List<Person>, pictures: Map<String, Bitmap?>) {
     Row (
         modifier = Modifier
-            .horizontalScroll(rememberScrollState()) // this makes it scrollable
+            .horizontalScroll(rememberScrollState())
             .height(intrinsicSize = IntrinsicSize.Max)
             .padding(bottom = 8.dp)
     ) {
         persons.forEach { person ->
-            MoviePerson(person)
+            val personPhoto = pictures.getOrDefault(person.photoUrl, null)
+            MoviePerson(person, personPhoto)
         }
     }
 }
 
 @Composable
-fun MoviePerson(person: Person) {
+fun MoviePerson(person: Person, photo: Bitmap?) {
+
+    val painter = if (photo != null) BitmapPainter(photo.asImageBitmap())
+    else painterResource(id = R.drawable.person)
+
     Column (
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.spacedBy(8.dp),
         modifier = Modifier
             .padding(end = 16.dp)
             .width(intrinsicSize = IntrinsicSize.Min)
+            .height(intrinsicSize = IntrinsicSize.Max)
     ) {
         Image (
-            painter = painterResource(id = R.drawable.person),
+            painter = painter,
             contentDescription = stringResource(R.string.person_description),
-            contentScale = ContentScale.Fit,
+            contentScale = ContentScale.FillHeight,
+            modifier = Modifier.height(intrinsicSize = IntrinsicSize.Max)
             )
 
         Row {
@@ -274,19 +288,19 @@ fun MoviePerson(person: Person) {
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview2() {
-    FilmografTheme {
-        FillMoviesContent(listOf(
-            Movie(
-                title = "new new film",
-                rating = 4.36f,
-                year = "1995",
-                genres = listOf("Криминал", "Ужасы", "Короткометражка", "Триллер", "Комедия", "Драма"),
-                slogan = "\"Можно пережить все - даже психологию\"",
-                persons = listOf(Person(name = "Harry Potter"), Person(name = "Liana Rojer")),
-                description = "В центре сюжета — психолог, специализирующийся на событиях, которые пресса квалифицирует как «чудо». Реально ли этим явлениям нет объяснения или их все-таки можно научно обосновать? Компанию скептически настроенной девушке составят священник и мутноватого вида «синий воротничок». Они сошлись, лед и пламень, то есть холодное научное знание и мистика — чета Кинг предлагает включиться в очередную увлекательную борьбу противоположностей.")
-        ))
-    }
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun GreetingPreview2() {
+//    FilmografTheme {
+//        FillMoviesContent(listOf(
+//            Movie(
+//                title = "new new film",
+//                rating = 4.36f,
+//                year = "1995",
+//                genres = listOf("Криминал", "Ужасы", "Короткометражка", "Триллер", "Комедия", "Драма"),
+//                slogan = "\"Можно пережить все - даже психологию\"",
+//                persons = listOf(Person(name = "Harry Potter"), Person(name = "Liana Rojer")),
+//                description = "В центре сюжета — психолог, специализирующийся на событиях, которые пресса квалифицирует как «чудо». Реально ли этим явлениям нет объяснения или их все-таки можно научно обосновать? Компанию скептически настроенной девушке составят священник и мутноватого вида «синий воротничок». Они сошлись, лед и пламень, то есть холодное научное знание и мистика — чета Кинг предлагает включиться в очередную увлекательную борьбу противоположностей.")
+//        ))
+//    }
+//}

@@ -1,9 +1,12 @@
 package com.example.filmograf.api
 
+import okhttp3.ResponseBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
+import retrofit2.http.Url
 
 interface MoviesApi {
 
@@ -12,10 +15,13 @@ interface MoviesApi {
         @Query("page") page: Int = 1,
         @Query("limit") limit: Int = 10,
         @Query("query") query: String
-    ): Call<MoviesResponse>
+    ): Response<MoviesResponse>
 
     @GET("{id}")
-    fun searchMovieById (
+    suspend fun searchMovieById (
         @Path("id") id: Int
-    ): Call<MoviesResponse>
+    ): Response<MoviesResponse>
+
+    @GET
+    suspend fun fetchPoster(@Url url: String): ResponseBody
 }
