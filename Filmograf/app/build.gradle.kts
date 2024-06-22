@@ -54,6 +54,13 @@ dependencies {
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
     implementation ("io.coil-kt:coil-compose:2.4.0")
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
+
+    val koin_version = "3.2.0-beta-1"
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation ("io.insert-koin:koin-android:$koin_version")
+
+    testImplementation ("io.insert-koin:koin-test-junit4:$koin_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

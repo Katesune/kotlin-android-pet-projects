@@ -1,8 +1,7 @@
-package com.example.filmograf
+package com.example.filmograf.presentation
 
 import android.graphics.Bitmap
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -27,7 +26,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.layout.ContentScale
@@ -36,24 +34,25 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
+import com.example.filmograf.MoviesViewModel
+import com.example.filmograf.R
+import com.example.filmograf.domain.models.Movie
+import com.example.filmograf.domain.models.Person
 import com.example.filmograf.ui.theme.FilmografTheme
 import com.example.filmograf.ui.theme.Typography
 import com.example.filmograf.ui.theme.quote
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 private const val TAG = "MoviesActivity"
 
 class MoviesActivity : ComponentActivity() {
 
-    private lateinit var moviesViewModel: MoviesViewModel
+    private val moviesViewModel by viewModel<MoviesViewModel>()
     
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
-        moviesViewModel = ViewModelProvider(this)[MoviesViewModel::class.java]
 
         setContent {
             FilmografTheme {
@@ -136,7 +135,7 @@ fun MoviePoster(movie: Movie, poster: Bitmap?) {
         modifier = Modifier
             //.clip(CutCornerShape(24.dp))
             .fillMaxWidth()
-            .height(200.dp)
+            .height(250.dp)
 
     )
 }

@@ -1,19 +1,25 @@
 package com.example.filmograf
 
-import android.util.Log
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.filmograf.api.CallResult
+import com.example.filmograf.domain.models.Movie
+import com.example.filmograf.domain.usecase.GetMoviesImages
+import com.example.filmograf.domain.usecase.SearchMovieById
+import com.example.filmograf.domain.usecase.SearchMoviesByQuery
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
 
 private const val TAG = "MoviesViewModel"
 
-class MoviesViewModel: ViewModel() {
+class MoviesViewModel(
+    private val searchMovieById: SearchMovieById,
+    private val searchMoviesByQuery: SearchMoviesByQuery,
+    private val getMoviesImages: GetMoviesImages
+)
+    : ViewModel() {
 
     private var _movies = MutableStateFlow<List<Movie>>(listOf())
     val movies: StateFlow<List<Movie>> = _movies.asStateFlow()
@@ -21,11 +27,9 @@ class MoviesViewModel: ViewModel() {
     private val _imageCollection = MutableStateFlow<Map<String, Bitmap?>>(mapOf())
     val imageCollection: StateFlow<Map<String, Bitmap?>> = _imageCollection.asStateFlow()
 
-    private val moviesCollector = MoviesCollector()
-
     fun collectMovies() {
         viewModelScope.launch {
-            moviesCollector.searchMovie(666)
+            searchMovieById.invoke(666)
                 .collect { movies ->
                 _movies.value += movies
                 prepareImages()
@@ -42,7 +46,7 @@ class MoviesViewModel: ViewModel() {
 
     private fun collectImages(imagesUrls: List<String>) {
         viewModelScope.launch {
-            moviesCollector.deliverImages(imagesUrls)
+            getMoviesImages.execute(imagesUrls)
                 .collect {
                     _imageCollection.value += it
                 }

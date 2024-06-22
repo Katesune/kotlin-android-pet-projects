@@ -1,6 +1,5 @@
-package com.example.filmograf.api
+package com.example.filmograf.data.api
 
-import android.util.Log
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
@@ -8,18 +7,14 @@ import okhttp3.Response
 
 private const val API_KEY = "#"
 
-class MoviesInterceptor: Interceptor {
+abstract class InterceptorWithProps : Interceptor {
 
-    private val selectFields = listOf(
-        "id", "name", "description", "shortDescription", "slogan", "year", "rating", "genres", "poster", "persons"
-    )
-
+    abstract val queryProps: Map<String, String>
     override fun intercept(chain: Interceptor.Chain): Response {
-
         val initialRequest: Request = chain.request()
 
-        val urlWithProps: HttpUrl = initialRequest.url.newBuilder()
-            .addQueryParameter("selectFields", selectFields.toString())
+        val urlWithProps = initialRequest.url.newBuilder()
+            .setQueryPropsInUrl()
             .build()
 
         val requestWithProps: Request = initialRequest.newBuilder()
@@ -28,9 +23,13 @@ class MoviesInterceptor: Interceptor {
             .url(urlWithProps)
             .build()
 
-        Log.d("request", requestWithProps.url.toString())
-
         return chain.proceed(requestWithProps)
     }
 
+    private fun HttpUrl.Builder.setQueryPropsInUrl(): HttpUrl.Builder {
+        for (queryProp in queryProps) {
+            this.addQueryParameter(queryProp.key, queryProp.value)
+        }
+        return this
+    }
 }
