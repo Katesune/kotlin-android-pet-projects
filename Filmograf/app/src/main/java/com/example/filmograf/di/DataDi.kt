@@ -11,19 +11,19 @@ import org.koin.dsl.module
 
 val dataModule = module {
 
-    single<RetrofitService> {
-        MoviesRetrofitService (
+    single<com.example.filmograf.data.api.loader.RetrofitService> {
+        com.example.filmograf.data.api.loader.MoviesRetrofitService(
             client = get(qualifier = named("clientWithInterceptor")),
             gson = get(qualifier = named("gsonWithDeserializer"))
         )
     }
 
-    single<MoviesLoader> {
-        MoviesRetrofitLoader(moviesRetrofitService = get())
+    single<com.example.filmograf.data.api.MoviesLoader> {
+        com.example.filmograf.data.api.loader.MoviesRetrofitLoader(moviesRetrofitService = get())
     }
 
-    single<MoviesRepository> {
-        MoviesRepositoryImpl(moviesLoader = get())
+    single<com.example.filmograf.domain.repository.MoviesRepository> {
+        com.example.filmograf.data.repository.MoviesRepositoryImpl(moviesLoader = get())
     }
 
 }

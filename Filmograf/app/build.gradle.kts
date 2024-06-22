@@ -51,9 +51,11 @@ android {
 
 dependencies {
 
+    implementation(project(":domain"))
+    implementation(project(":data"))
+
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.3.0")
-    implementation ("io.coil-kt:coil-compose:2.4.0")
     implementation ("androidx.navigation:navigation-compose:2.7.7")
 
     val koin_version = "3.2.0-beta-1"

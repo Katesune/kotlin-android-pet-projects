@@ -13,7 +13,7 @@ abstract class InterceptorWithProps : Interceptor {
     override fun intercept(chain: Interceptor.Chain): Response {
         val initialRequest: Request = chain.request()
 
-        val urlWithProps = initialRequest.url.newBuilder()
+        val urlWithProps = initialRequest.url().newBuilder()
             .setQueryPropsInUrl()
             .build()
 

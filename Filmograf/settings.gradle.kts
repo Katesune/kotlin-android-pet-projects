@@ -21,3 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Filmograf"
 include(":app")
+include(":data")
+include(":domain")

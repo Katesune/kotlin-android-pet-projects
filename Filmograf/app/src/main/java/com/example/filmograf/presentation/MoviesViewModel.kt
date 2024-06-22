@@ -1,9 +1,8 @@
-package com.example.filmograf
+package com.example.filmograf.presentation
 
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.filmograf.domain.models.Movie
 import com.example.filmograf.domain.usecase.GetMoviesImages
 import com.example.filmograf.domain.usecase.SearchMovieById
 import com.example.filmograf.domain.usecase.SearchMoviesByQuery
@@ -21,8 +20,9 @@ class MoviesViewModel(
 )
     : ViewModel() {
 
-    private var _movies = MutableStateFlow<List<Movie>>(listOf())
-    val movies: StateFlow<List<Movie>> = _movies.asStateFlow()
+    private var _movies =
+        MutableStateFlow<List<com.example.filmograf.domain.models.Movie>>(listOf())
+    val movies: StateFlow<List<com.example.filmograf.domain.models.Movie>> = _movies.asStateFlow()
 
     private val _imageCollection = MutableStateFlow<Map<String, Bitmap?>>(mapOf())
     val imageCollection: StateFlow<Map<String, Bitmap?>> = _imageCollection.asStateFlow()

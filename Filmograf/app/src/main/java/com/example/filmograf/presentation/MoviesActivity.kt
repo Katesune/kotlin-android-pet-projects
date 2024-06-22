@@ -35,7 +35,6 @@ import androidx.compose.ui.text.style.Hyphens
 import androidx.compose.ui.text.style.LineBreak
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.example.filmograf.MoviesViewModel
 import com.example.filmograf.R
 import com.example.filmograf.domain.models.Movie
 import com.example.filmograf.domain.models.Person
@@ -86,7 +85,7 @@ fun MainContent(moviesViewModel: MoviesViewModel) {
 
 
 @Composable
-fun MovieItem(movie: Movie, pictures: Map<String, Bitmap?>) {
+fun MovieItem(movie: com.example.filmograf.domain.models.Movie, pictures: Map<String, Bitmap?>) {
     Column (
         modifier = Modifier
             .fillMaxWidth()
@@ -109,7 +108,7 @@ fun MovieItem(movie: Movie, pictures: Map<String, Bitmap?>) {
 }
 
 @Composable
-fun FilmHeader(movie: Movie, poster: Bitmap?) {
+fun FilmHeader(movie: com.example.filmograf.domain.models.Movie, poster: Bitmap?) {
     Box (
         contentAlignment = Alignment.TopStart,
         modifier = Modifier
@@ -121,7 +120,7 @@ fun FilmHeader(movie: Movie, poster: Bitmap?) {
 }
 
 @Composable
-fun MoviePoster(movie: Movie, poster: Bitmap?) {
+fun MoviePoster(movie: com.example.filmograf.domain.models.Movie, poster: Bitmap?) {
 
     val paint = if (poster != null) BitmapPainter(poster.asImageBitmap())
     else painterResource(id = R.drawable.orig)
@@ -167,7 +166,7 @@ fun MovieRating(rating: Float, modifier: Modifier) {
 }
 
 @Composable
-fun MovieAnnouncement(movie: Movie) {
+fun MovieAnnouncement(movie: com.example.filmograf.domain.models.Movie) {
     Box(
         contentAlignment = Alignment.Center,
         modifier = Modifier
@@ -243,7 +242,7 @@ fun MovieSlogan(slogan: String) {
 }
 
 @Composable
-fun PersonsRow(persons: List<Person>, pictures: Map<String, Bitmap?>) {
+fun PersonsRow(persons: List<com.example.filmograf.domain.models.Person>, pictures: Map<String, Bitmap?>) {
     Row (
         modifier = Modifier
             .horizontalScroll(rememberScrollState())
@@ -258,7 +257,7 @@ fun PersonsRow(persons: List<Person>, pictures: Map<String, Bitmap?>) {
 }
 
 @Composable
-fun MoviePerson(person: Person, photo: Bitmap?) {
+fun MoviePerson(person: com.example.filmograf.domain.models.Person, photo: Bitmap?) {
 
     val painter = if (photo != null) BitmapPainter(photo.asImageBitmap())
     else painterResource(id = R.drawable.person)

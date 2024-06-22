@@ -4,7 +4,7 @@ import com.example.filmograf.domain.models.Movie
 import com.example.filmograf.domain.models.Person
 
 internal interface MovieDataListConverted: MovieDataConverted {
-    fun List<MovieData>.toMovies(): List<Movie> {
+    fun List<MovieData>.toMovies(): List<com.example.filmograf.domain.models.Movie> {
         return this
             .filter { movieData ->
                 movieData.title.isNotBlank()
@@ -16,8 +16,8 @@ internal interface MovieDataListConverted: MovieDataConverted {
 }
 
 internal interface MovieDataConverted {
-    fun MovieData.toMovie(): Movie {
-        return Movie (
+    fun MovieData.toMovie(): com.example.filmograf.domain.models.Movie {
+        return com.example.filmograf.domain.models.Movie(
             id = this.id,
             title = this.title,
             year = this.year,
@@ -31,9 +31,9 @@ internal interface MovieDataConverted {
         )
     }
 
-    fun MovieData.convertPersons(): List<Person> {
+    fun MovieData.convertPersons(): List<com.example.filmograf.domain.models.Person> {
         return persons.map {
-            Person (
+            com.example.filmograf.domain.models.Person(
                 id = it.id,
                 name = it.name,
                 photoUrl = it.photoUrl

@@ -13,14 +13,17 @@ val retrofitModule = module {
 
     single<OkHttpClient> (named("clientWithInterceptor")) {
         OkHttpClient.Builder()
-            .addInterceptor(MoviesInterceptor())
+            .addInterceptor(com.example.filmograf.data.api.loader.MoviesInterceptor())
             .build()
     }
 
     single<Gson> (named("gsonWithDeserializer")) {
         GsonBuilder()
             .setLenient()
-            .registerTypeAdapter(MoviesResponse::class.java, MoviesDeserializer())
+            .registerTypeAdapter(
+                com.example.filmograf.data.api.loader.MoviesResponse::class.java,
+                com.example.filmograf.data.json.MoviesDeserializer()
+            )
             .create()
     }
 
