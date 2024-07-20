@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Фильмограф</string>
+    <string name="title_activity_movies">Фильмограф</string>
+    <string name="poster_description">Постер фильма "%s"</string>
+    <string name="star_description">Картинка звезды по рейтингу фильма</string>
+    <string name="person_description">Фото актера</string>
+    <string name="initial_search">Искать фильм по слову</string>
+    <string name="search_icon_description">Иконка поиска</string>
+    <string name="empty_movies">Фильмов по вашему запросу не найдено</string>
+    <string name="loading_movies">Загрузка</string>
+</resources>

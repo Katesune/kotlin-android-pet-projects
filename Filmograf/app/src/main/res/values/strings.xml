@@ -1,7 +1,11 @@
 <resources>
     <string name="app_name">Filmograf</string>
-    <string name="title_activity_movies">MoviesActivity</string>
+    <string name="title_activity_movies">Filmograf</string>
     <string name="poster_description">The poster of the movie "%s"</string>
     <string name="star_description">Star picture for movie rating</string>
     <string name="person_description">Photo of the actor</string>
+    <string name="initial_search">Search movie by title</string>
+    <string name="search_icon_description">Search icon description</string>
+    <string name="empty_movies">No movies were found for your search</string>
+    <string name="loading_movies">Downloading</string>
 </resources>

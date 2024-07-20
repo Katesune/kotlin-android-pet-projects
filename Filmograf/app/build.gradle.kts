@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    namespace = "com.example.filmograf"
+    namespace = "com.katesune.filmograf"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.example.filmograf"
+        applicationId = "com.katesune.filmograf"
         minSdk = 24
         targetSdk = 34
         versionCode = 1
@@ -63,6 +63,7 @@ dependencies {
     implementation ("io.insert-koin:koin-android:$koin_version")
 
     testImplementation ("io.insert-koin:koin-test-junit4:$koin_version")
+    implementation("androidx.compose.material3:material3:1.2.0-rc01")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
