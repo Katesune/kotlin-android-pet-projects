@@ -13,7 +13,9 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
+import retrofit2.HttpException
 import retrofit2.Response
+import java.net.SocketTimeoutException
 
 private const val TAG = "MoviesRetrofitLoader"
 
@@ -47,15 +49,22 @@ class MoviesRetrofitLoader(
         withContext(Dispatchers.IO) {
 
             val imageQuery = async (CoroutineName("QueryForLoadingImage")) {
-                val response = moviesApi.fetchPoster(url)
+                try {
+                    val response = moviesApi.fetchPoster(url)
 
-                when (val queryImageResult = RetrofitResponseHandler(response).handleResponse()) {
-                    is CallResult.Success -> queryImageResult.response.byteStream().use(BitmapFactory::decodeStream)
-                    else -> {
-                        queryImageResult.logErrorsCall()
-                        null
+                    when (val queryImageResult = RetrofitResponseHandler(response).handleResponse()) {
+                        is CallResult.Success -> queryImageResult.response.byteStream().use(BitmapFactory::decodeStream)
+                        else -> {
+                            queryImageResult.logErrorsCall()
+                            null
+                        }
                     }
                 }
+                catch(socketTimeoutException: SocketTimeoutException) {
+                    Log.d(TAG, "Image SocketTimeoutException exception")
+                    null
+                }
+
             }
 
             imageQuery.await()

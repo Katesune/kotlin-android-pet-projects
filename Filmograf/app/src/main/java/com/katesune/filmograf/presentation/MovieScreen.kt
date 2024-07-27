@@ -1,5 +1,6 @@
 package com.katesune.filmograf.presentation
 
+import android.content.res.Configuration
 import android.graphics.Bitmap
 import android.util.Log
 import androidx.compose.foundation.Image
@@ -20,6 +21,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +30,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.painter.BitmapPainter
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +46,7 @@ import com.katesune.filmograf.domain.models.Person
 import com.katesune.filmograf.ui.theme.FilmografTheme
 import com.katesune.filmograf.ui.theme.Typography
 import com.katesune.filmograf.ui.theme.quote
+import kotlin.math.roundToInt
 
 private val tinyPadding = 8.dp
 private val middlePadding = 16.dp
@@ -215,9 +219,9 @@ fun MovieWithDetails(
             modifier = Modifier
                 .fillMaxWidth()
                 .background(Color.White)
-                .weight(2f)
+                //.weight(2f)
         ) {
-            MovieHeader(movie, poster, Modifier.weight(2f))
+            MovieHeader(movie, poster)
         }
         Column(
             modifier = Modifier
@@ -226,7 +230,7 @@ fun MovieWithDetails(
                 .padding(bottom = tinyPadding)
                 .weight(4f)
         ) {
-            MovieBodyWithDetails(movie, pictures, Modifier.weight(1f))
+            MovieBodyWithDetails(movie, pictures)
         }
     }
 }
@@ -244,7 +248,7 @@ fun SingleBasicMovie(
             .fillMaxWidth()
             .background(Color.White)
     ) {
-        MovieHeader(movie, poster, Modifier.weight(1f))
+        MovieHeader(movie, poster)
         MovieBody(movie)
     }
 }
@@ -252,15 +256,14 @@ fun SingleBasicMovie(
 @Composable
 fun MovieHeader(
     movie: Movie,
-    poster: Bitmap?,
-    modifier: Modifier
+    poster: Bitmap?
 ) {
     Box (
         contentAlignment = Alignment.TopStart,
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
     ) {
-        MoviePoster(movie.title, poster, modifier)
+        MoviePoster(movie.title, poster)
         MovieRating(movie.rating, Modifier.align(Alignment.BottomStart))
     }
 }
@@ -268,12 +271,17 @@ fun MovieHeader(
 @Composable
 fun MoviePoster(
     movieTitle: String,
-    poster: Bitmap?,
-    modifier: Modifier
+    poster: Bitmap?
 ) {
-
     val paint = if (poster != null) BitmapPainter(poster.asImageBitmap())
     else painterResource(id = R.drawable.empty_image)
+
+    val configuration = LocalConfiguration.current
+    val posterHeight = remember (poster) {
+        poster?.let {
+            calculatePosterHeight(it, configuration).dp
+        } ?: 200.dp
+    }
 
     Image (
         painter = paint,
@@ -281,9 +289,20 @@ fun MoviePoster(
         contentScale = ContentScale.Crop,
         alignment = Alignment.TopStart,
 
-        modifier = modifier
+        modifier = Modifier
             .fillMaxWidth()
+            .height(posterHeight)
     )
+}
+
+fun calculatePosterHeight(poster: Bitmap, configuration: Configuration): Int {
+    var posterHeight = (poster.asImageBitmap().height *
+            ( configuration.screenWidthDp.dp / poster.asImageBitmap().width.dp))
+        .toInt()
+
+    if (posterHeight > configuration.screenHeightDp / 2) posterHeight = configuration.screenHeightDp / 2
+
+    return posterHeight
 }
 
 @Composable
@@ -294,8 +313,14 @@ fun MovieRating(rating: Float, modifier: Modifier) {
             .padding(start = middlePadding)
             .background(
                 color = Color.White,
-                shape = RectangleShape)
-            .padding(start = tinyPadding, bottom = tinyPadding, top = tinyPadding, end = middlePadding)
+                shape = RectangleShape
+            )
+            .padding(
+                start = tinyPadding,
+                bottom = tinyPadding,
+                top = tinyPadding,
+                end = middlePadding
+            )
     ){
         Image (
             painter = painterResource(id = R.drawable.raiting_star),
@@ -339,13 +364,12 @@ fun MovieBody(
 fun MovieBodyWithDetails(
     movie: Movie,
     pictures: Map<String, Bitmap?>,
-    modifier: Modifier
 ) {
     MovieAnnouncement(movie.title, movie.year)
     MovieGenres(movie.genres)
     MovieDescription(movie.description)
     MovieSlogan(movie.slogan)
-    PersonsRow(movie.persons, pictures, modifier)
+    PersonsRow(movie.persons, pictures)
 }
 
 @Composable
@@ -432,7 +456,12 @@ fun MovieSlogan(slogan: String) {
         style = Typography.quote,
         textAlign = TextAlign.Center,
         modifier = Modifier
-            .padding(top = tinyPadding, bottom = tinyPadding, start = middlePadding, end = middlePadding)
+            .padding(
+                top = tinyPadding,
+                bottom = tinyPadding,
+                start = middlePadding,
+                end = middlePadding
+            )
             .fillMaxWidth()
     )
 }
@@ -440,14 +469,13 @@ fun MovieSlogan(slogan: String) {
 @Composable
 fun PersonsRow(
     persons: List<Person>,
-    pictures: Map<String, Bitmap?>,
-    modifier: Modifier
+    pictures: Map<String, Bitmap?>
 ) {
     Row (
-        modifier = modifier
+        modifier = Modifier
             .horizontalScroll(rememberScrollState())
-            .height(intrinsicSize = IntrinsicSize.Max)
             .width(intrinsicSize = IntrinsicSize.Min)
+            .height(intrinsicSize = IntrinsicSize.Max)
             .padding(bottom = middlePadding)
     ) {
         persons.forEach { person ->
@@ -475,13 +503,12 @@ fun MoviePerson(person: Person, photo: Bitmap?) {
             contentDescription = stringResource(R.string.person_description),
             contentScale = ContentScale.FillHeight,
             modifier = Modifier
-                .weight(0.8f)
+                .height(100.dp)
         )
-
         Row (
             modifier = Modifier
-                .weight(0.2f)
                 .width(intrinsicSize = IntrinsicSize.Min)
+                .height(intrinsicSize = IntrinsicSize.Max)
         ) {
             Text(
                 person.name,
