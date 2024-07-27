@@ -13,7 +13,6 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.withContext
-import retrofit2.HttpException
 import retrofit2.Response
 import java.net.SocketTimeoutException
 
@@ -61,7 +60,7 @@ class MoviesRetrofitLoader(
                     }
                 }
                 catch(socketTimeoutException: SocketTimeoutException) {
-                    Log.d(TAG, "Image SocketTimeoutException exception")
+                    Log.e(TAG, "Image SocketTimeoutException exception")
                     null
                 }
 

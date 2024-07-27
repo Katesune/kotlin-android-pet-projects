@@ -1,13 +1,15 @@
 package com.katesune.filmograf.data.api
 
 import android.util.Log
+import com.example.data.BuildConfig
 import okhttp3.HttpUrl
 import okhttp3.Interceptor
 import okhttp3.Request
 import okhttp3.Response
 
 private const val TAG = "InterceptorWithProps"
-private const val API_KEY = "#"
+
+private const val API_KEY = BuildConfig.API_KEY
 
 abstract class InterceptorWithProps : Interceptor {
 
