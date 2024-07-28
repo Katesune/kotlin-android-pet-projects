@@ -1,19 +1,12 @@
-# This is a basic workflow to help you get started with Actions
-
 name: Run_unit_tests
 
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "main" branch
   push:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
 
-  # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
-
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 
 jobs:
   build:
@@ -29,16 +22,6 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           cache: 'gradle'
-          secrets: inherit
-
-      - name: Test
-        env:
-          TEST_SECRET: ${{ secrets.TEST_SECRET }}
-        run: |
-          echo "$TEST_SECRET" |  awk '$1=$1' FS= OFS=" "
-          touch .env
-          echo GOOGLE_API_KEY = $TEST_SECRET >> .env
-          cat .env | awk '$1=$1' FS= OFS=" "
         
       - name: Run gradle tests
         env: 

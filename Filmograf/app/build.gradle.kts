@@ -41,7 +41,7 @@ android {
 
             } else {
 
-                storeFile = file("keystore/upload-keystore")
+                storeFile = file("keystore/upload-keystore.jks")
                 storePassword = System.getenv(keystorePassAlias)
                 keyAlias = System.getenv(keystoreKeyAlias)
                 keyPassword = System.getenv(keystoreKeyPassAlias)
