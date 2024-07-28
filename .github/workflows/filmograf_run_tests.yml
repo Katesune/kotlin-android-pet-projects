@@ -29,11 +29,22 @@ jobs:
           distribution: 'zulu'
           java-version: '17'
           cache: 'gradle'
+          secrets: inherit
 
-      - name: Make gradlew executable
-        run: chmod +x gradlew
-        working-directory: ./Filmograf
+      - name: Test
+        env:
+          TEST_SECRET: ${{ secrets.TEST_SECRET }}
+        run: |
+          echo "$TEST_SECRET" |  awk '$1=$1' FS= OFS=" "
+          touch .env
+          echo GOOGLE_API_KEY = $TEST_SECRET >> .env
+          cat .env | awk '$1=$1' FS= OFS=" "
         
       - name: Run gradle tests
-        run: ./gradlew test --stacktrace
+        env: 
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          chmod +x gradlew
+          ./gradlew clean
+          ./gradlew test --stacktrace
         working-directory: ./Filmograf

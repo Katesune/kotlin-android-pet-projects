@@ -9,7 +9,7 @@ import okhttp3.Response
 
 private const val TAG = "InterceptorWithProps"
 
-private const val API_KEY = BuildConfig.API_KEY
+private val API_KEY = BuildConfig.API_KEY
 
 abstract class InterceptorWithProps : Interceptor {
 

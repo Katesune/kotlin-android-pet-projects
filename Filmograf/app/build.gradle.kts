@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -20,8 +22,37 @@ android {
         }
     }
 
+    val localPropFile = project.rootProject.file("local.properties")
+    val properties = Properties()
+
+    val keystorePassAlias = "FILMOGRAF_KEYSTORE_PASSWORD"
+    val keystoreKeyAlias = "FILMOGRAF_RELEASE_SIGN_KEY_ALIAS"
+    val keystoreKeyPassAlias = "FILMOGRAF_RELEASE_SIGN_KEY_PASSWORD"
+
+    signingConfigs {
+        create("release") {
+            if (localPropFile.exists()) {
+
+                properties.load(localPropFile.inputStream())
+                storeFile = file(properties.getProperty("keystore_file"))
+                storePassword = properties.getProperty(keystorePassAlias)
+                keyAlias = properties.getProperty(keystoreKeyAlias)
+                keyPassword = properties.getProperty(keystoreKeyPassAlias)
+
+            } else {
+
+                storeFile = file("keystore/upload-keystore")
+                storePassword = System.getenv(keystorePassAlias)
+                keyAlias = System.getenv(keystoreKeyAlias)
+                keyPassword = System.getenv(keystoreKeyPassAlias)
+
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig = signingConfigs.getByName("release")
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),

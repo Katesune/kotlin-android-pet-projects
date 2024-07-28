@@ -1,0 +1,51 @@
+name: Test_and_build_signed_apk_and_aab_for_release
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+env:
+  KEYSTORE_PASSWORD: ${{ secrets.FILMOGRAF_KEYSTORE_PASSWORD }}
+  RELEASE_SIGN_KEY_ALIAS: ${{ secrets.FILMOGRAF_RELEASE_SIGN_KEY_ALIAS }}
+  RELEASE_SIGN_KEY_PASSWORD: ${{ secrets.FILMOGRAF_RELEASE_SIGN_KEY_PASSWORD }}
+
+jobs:
+  build_apk_aab:
+    if: startsWith(github.head_ref, 'release/') == true
+    name: Build release artifacts
+    runs-on: ubuntu-latest
+    steps:
+
+      - uses: actions/checkout@v4
+
+      - name: Set Up JDK
+        uses: actions/setup-java@v3
+        with: 
+          distribution: 'zulu'
+          java-version: '17'
+          cache: 'gradle'
+
+      - name: Checkout keystore repository
+        uses: actions/checkout@v4
+        with:
+          repository: ${{ secrets.FILMOGRAF_KEYSTORE_REPOSITORY }}
+          token: ${{ secrets.FILMOGRAF_KEYSTORE_ACCESS_TOKEN }}
+          path: ./Filmograf/app/keystore
+
+      - name: Run tests and build release artifacts
+        env: 
+          API_KEY: ${{ secrets.API_KEY }}
+        run: |
+          chmod +x gradlew
+          ./gradlew test
+          ./gradlew assembleRelease --stacktrace
+          ./gradlew bundleRelease
+        working-directory: ./Filmograf
+
+      - name: Upload AAB Bundle
+        uses: actions/upload-artifact@v2
+        with:
+          name: app-release.aab
+          path: ./Filmograf/app/build/outputs/bundle/release/filmograf-release.aab

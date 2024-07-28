@@ -7,9 +7,12 @@ plugins {
 
 android {
 
-    val keystoreFile = project.rootProject.file("local.properties")
+    val localPropFile = project.rootProject.file("local.properties")
     val properties = Properties()
-    properties.load(keystoreFile.inputStream())
+
+    if (localPropFile.exists()) {
+        properties.load(localPropFile.inputStream())
+    }
 
     namespace = "com.example.data"
     compileSdk = 34
@@ -25,11 +28,16 @@ android {
         consumerProguardFiles("consumer-rules.pro")
 
         val apiKey = properties.getProperty("KP_API_KEY") ?: ""
-        
+
         buildConfigField (
             type = "String",
             name = "API_KEY",
-            value = apiKey
+            value = apiKey.ifBlank {
+                val keyFromEnv = System.getenv("API_KEY").ifBlank{"\" \""}
+                keyFromEnv.let {
+                    "\"$it\""
+                }
+            }
         )
     }
 
@@ -42,10 +50,12 @@ android {
             )
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
     kotlinOptions {
         jvmTarget = "1.8"
     }
