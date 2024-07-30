@@ -42,15 +42,13 @@ jobs:
           json: '{"key_id":"${{ secrets.RUSTORE_API_KEY_ID }}", "client_secret":"${{ secrets.RUSTORE_API_CLIENT_SECRET }}"}'
           dir: 'Filmograf/'
 
-      - name: Run tests and push to RuStore
+      - name: Run tests and build release artifacts
         env: 
           API_KEY: ${{ secrets.API_KEY }}
         run: |
           chmod +x gradlew
           ./gradlew test
           ./gradlew bundleRelease
-          ./gradlew assembleRelease
-          ./gradlew assembleRelease publishRustoreRelease
         working-directory: ./Filmograf
 
       - name: Upload AAB Bundle
@@ -58,3 +56,23 @@ jobs:
         with:
           name: app-release.aab
           path: Filmograf/app/build/outputs/bundle/release/app-release.aab
+          
+  send_aab:
+    name: Update release RuStore
+    needs: build_aab
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Download AAB file
+        uses: actions/download-artifact@v2
+        with:
+          name: app-release.aab
+      
+      - name: Send AAB to RuStore
+        run: |
+          curl --location --request POST "${{ secrets.RUSTORE_URL }}" --verbose \
+          --header "Public-Token: ${{ secrets.RUSTORE_API_KEY }}" \
+          --header "Content-Type: multipart/form-data" \
+          --form "file=@app-release.aab"

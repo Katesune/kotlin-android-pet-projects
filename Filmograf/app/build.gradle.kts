@@ -1,8 +1,12 @@
+import ru.cian.rustore.publish.BuildFormat
+import ru.cian.rustore.publish.DeployType
+import ru.cian.rustore.publish.ReleaseNote
 import java.util.Properties
 
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
+    id("ru.cian.rustore-publish-gradle-plugin") version "0.4.0"
 }
 
 android {
@@ -49,6 +53,24 @@ android {
             }
         }
     }
+
+    rustorePublish {
+        instances {
+            create("release") {
+                credentialsPath = "/home/runner/work/kotlin-android-pet-projects/kotlin-android-pet-projects/Filmograf/credentials.json"
+                buildFormat = BuildFormat.APK
+                buildFile = "/home/runner/work/kotlin-android-pet-projects/kotlin-android-pet-projects/Filmograf/app/build/outputs/apk/release/app-release.apk"
+                deployType = DeployType.UPLOAD_ONLY
+                releaseNotes = listOf(
+                    ReleaseNote(
+                        lang = "ru-RU",
+                        filePath = "release-notes-ru.txt",
+                    )
+                )
+            }
+        }
+    }
+
 
     buildTypes {
         release {

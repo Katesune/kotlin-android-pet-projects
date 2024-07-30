@@ -15,6 +15,7 @@ jetbrainsKotlinJvm = "1.9.0"
 graphicsCore = "1.0.0"
 uiGraphics = "0.1.0-dev14"
 uiGraphicsAndroid = "1.7.0-beta03"
+ruStorePlugin = "0.4.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -44,3 +45,4 @@ android-application = { id = "com.android.application", version.ref = "agp" }
 jetbrains-kotlin-android = { id = "org.jetbrains.kotlin.android", version = "1.9.0" }
 android-library = { id = "com.android.library", version.ref = "agp" }
 jetbrains-kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "jetbrainsKotlinJvm" }
+rustore-publish-gradle-plugin = { id = "ru.cian.rustore-publish-gradle-plugin", version.ref = "ruStorePlugin" }
