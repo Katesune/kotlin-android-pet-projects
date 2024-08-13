@@ -3,7 +3,7 @@ package com.katesune.cryptoapp.di
 import com.katesune.data.api.loader.CoinsLoader
 import com.katesune.data.api.loader.RetrofitService
 import com.katesune.data.repository.CoinsRepositoryImpl
-import com.katesune.domain.CoinsRepository
+import com.katesune.domain.repository.CoinsRepository
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
 

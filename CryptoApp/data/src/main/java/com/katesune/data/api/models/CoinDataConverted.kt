@@ -1,7 +1,7 @@
 package com.katesune.data.api.models
 
-import com.katesune.domain.Coin
-import com.katesune.domain.MarketCoin
+import com.katesune.domain.models.Coin
+import com.katesune.domain.models.MarketCoin
 
 internal interface CoinMarketDataConverted {
 

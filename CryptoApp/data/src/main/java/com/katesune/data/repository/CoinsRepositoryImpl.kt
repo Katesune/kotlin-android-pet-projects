@@ -5,9 +5,9 @@ import com.katesune.data.api.models.CoinDetailsData
 import com.katesune.data.api.models.CoinDetailsDataConverted
 import com.katesune.data.api.models.CoinMarketData
 import com.katesune.data.api.models.CoinMarketDataConverted
-import com.katesune.domain.Coin
-import com.katesune.domain.CoinsRepository
-import com.katesune.domain.MarketCoin
+import com.katesune.domain.models.Coin
+import com.katesune.domain.repository.CoinsRepository
+import com.katesune.domain.models.MarketCoin
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
