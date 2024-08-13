@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId = "com.katesune.cryptoapp"
-        minSdk = 24
+        minSdk = 25
         targetSdk = 34
         versionCode = 1
         versionName = "1.0"
@@ -50,6 +50,15 @@ android {
 }
 
 dependencies {
+
+    implementation(project(":data"))
+    implementation(project(":domain"))
+
+    val koin_version = "3.2.0-beta-1"
+    implementation("io.insert-koin:koin-core:$koin_version")
+    implementation ("io.insert-koin:koin-android:$koin_version")
+
+    testImplementation ("io.insert-koin:koin-test-junit4:$koin_version")
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

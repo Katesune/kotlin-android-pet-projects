@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">CryptoApp</string>
+    <string name="crypto_list">Список криптовалют</string>
+
+    <string name="currency_usd">USD</string>
+    <string name="currency_rub">RUB</string>
+
+    <string name="error_message">Произошла какая-то ошибка :(</string>
+    <string name="try_again_question">Попробуем снова?</string>
+    <string name="try_again_button">Попробовать</string>
+    
+    <string name="description">Описание</string>
+    <string name="categories">Категории</string>
 </resources>

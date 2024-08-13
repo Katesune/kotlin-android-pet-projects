@@ -1,4 +1,4 @@
-package com.katesune.cryptoapp
+package com.katesune.cryptoapp.presentation
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -12,16 +12,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.katesune.cryptoapp.ui.theme.CryptoAppTheme
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainActivity : ComponentActivity() {
+
+    private val coinsViewModel by viewModel<CoinsViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+
+        val coins = coinsViewModel.coins
+
+        val firstCoin = coins.value.getOrNull(0)?.name ?: "efwpf"
+
         setContent {
             CryptoAppTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Greeting(
-                        name = "Android",
+                        name = firstCoin,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
