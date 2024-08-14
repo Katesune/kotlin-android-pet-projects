@@ -10,14 +10,14 @@ import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
 import org.koin.core.logger.Level
 
-class MovieApp : Application() {
+class CryptoApp : Application() {
 
     override fun onCreate() {
         super.onCreate()
 
         startKoin {
             androidLogger(level = Level.ERROR)
-            androidContext(this@MovieApp)
+            androidContext(this@CryptoApp)
             modules(listOf(retrofitModule, appModule, domainModule, dataModule))
         }
     }

@@ -1,7 +1,7 @@
 package com.katesune.data.api.models
 
-class CoinMarketData(
-    var id: String,
+class MarketCoinData(
+    var id: String = "",
     var symbol:String = "",
     var name: String = "",
     var image: String = "",

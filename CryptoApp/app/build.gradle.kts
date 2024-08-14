@@ -54,6 +54,16 @@ dependencies {
     implementation(project(":data"))
     implementation(project(":domain"))
 
+    implementation ("androidx.navigation:navigation-compose:2.7.7")
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.3.0")
+    implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9")
+
+    implementation(libs.androidx.compose.material)
+    implementation(libs.androidx.room.ktx)
+    implementation("io.coil-kt:coil-compose:2.0.0-rc01")
+    implementation("androidx.compose.material3:material3:1.2.0-rc01")
+
     val koin_version = "3.2.0-beta-1"
     implementation("io.insert-koin:koin-core:$koin_version")
     implementation ("io.insert-koin:koin-android:$koin_version")

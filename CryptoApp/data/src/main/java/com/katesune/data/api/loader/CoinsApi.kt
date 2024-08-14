@@ -6,16 +6,14 @@ import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CoinsApi {
-    @GET("ping")
-    suspend fun ping(): String
 
     @GET("coins/markets")
     suspend fun getMarketCoinsData(
         @Query("vs_currency") currency: String
-    ): Response<CoinsMarketResponse>
+    ): Response<MarketCoinsResponse>
 
     @GET("coins/{id}")
     suspend fun getCoinByIdData(
         @Path("id") id: String
-    ): Response<CoinDetailsResponse>
+    ): Response<CoinResponse>
 }

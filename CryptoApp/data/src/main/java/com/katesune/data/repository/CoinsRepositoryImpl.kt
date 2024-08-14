@@ -1,9 +1,9 @@
 package com.katesune.data.repository
 
 import com.katesune.data.api.loader.CoinsLoader
+import com.katesune.data.api.models.MarketCoinData
 import com.katesune.data.api.models.CoinDetailsData
 import com.katesune.data.api.models.CoinDetailsDataConverted
-import com.katesune.data.api.models.CoinMarketData
 import com.katesune.data.api.models.CoinMarketDataConverted
 import com.katesune.domain.models.Coin
 import com.katesune.domain.repository.CoinsRepository
@@ -25,7 +25,7 @@ class CoinsRepositoryImpl(
         return coinsLoader.getCoinData(coinResponse).convertCoinDetailsDataToCoin()
     }
 
-    private fun Flow<List<CoinMarketData>>.convertMarketCoinsDataToMarketCoins() : Flow<List<MarketCoin>> {
+    private fun Flow<List<MarketCoinData>>.convertMarketCoinsDataToMarketCoins() : Flow<List<MarketCoin>> {
         return this.map { coinMarketData -> coinMarketData.toMarketCoins()}
     }
 

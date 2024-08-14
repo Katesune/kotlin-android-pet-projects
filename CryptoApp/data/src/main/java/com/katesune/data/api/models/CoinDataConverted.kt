@@ -5,13 +5,13 @@ import com.katesune.domain.models.MarketCoin
 
 internal interface CoinMarketDataConverted {
 
-    fun List<CoinMarketData>.toMarketCoins(): List<MarketCoin> {
+    fun List<MarketCoinData>.toMarketCoins(): List<MarketCoin> {
         return this.map { coinMarketData ->
             coinMarketData.toMarketCoin()
         }
     }
 
-    fun CoinMarketData.toMarketCoin(): MarketCoin {
+    fun MarketCoinData.toMarketCoin(): MarketCoin {
         return MarketCoin(
             id = this.id,
             symbol = this.symbol,
@@ -27,6 +27,7 @@ internal interface CoinDetailsDataConverted {
     fun CoinDetailsData.toCoin(): Coin {
         return Coin(
             id = this.id,
+            image = this.image,
             symbol = this.symbol,
             name = this.name,
             description = this.description,

@@ -12,7 +12,7 @@ val dataModule = module {
     single<RetrofitService> {
         RetrofitService(
             client = get(qualifier = named("clientWithInterceptor")),
-            gson = get(qualifier = named("gsonWithDeserializer"))
+            gson = get(qualifier = named("gsonWithDeserializerMarketCoins")),
         )
     }
 

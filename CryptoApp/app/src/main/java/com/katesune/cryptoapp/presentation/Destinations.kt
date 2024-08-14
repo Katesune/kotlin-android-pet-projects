@@ -8,6 +8,6 @@ enum class Destinations(
     val route: String,
     val argKey: String
 ) {
-    MARKET_COINS(MARKET_ROUTE,"$MARKET_COINS/{currency}", "currency"),
-    COIN(COIN_ROUTE,"$COIN/{coinId}", "coinId"),
+    MARKET_COINS(MARKET_ROUTE,"$MARKET_ROUTE/{currency}", "currency"),
+    COIN(COIN_ROUTE,"$COIN_ROUTE/{coinId}", "coinId"),
 }
